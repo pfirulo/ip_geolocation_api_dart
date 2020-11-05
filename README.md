@@ -1,14 +1,84 @@
 # ip_geolocation_api
 
-Un package dart
+Example
 
-## Getting Started
+## Example
+```
+import 'package:flutter/material.dart';
+import 'package:ip_geolocation_api/ip_geolocation_api.dart';
+import 'dart:convert';
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Material App',
+        home: HomePage()
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String _text = '';
+  GeoLocationData _geoLocationData;
+
+
+  @override
+  initState() {
+    super.initState();
+    getIp();
+  }
+
+  Future<void> getIp() async {
+    _geoLocationData = await GeolocationAPI.getData();
+    if (_geoLocationData != null) {
+      setState(() {
+        _text = _geoLocationData.ip;
+      });
+
+    } else {
+      print('No llego nada desde data');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Center(
+          child: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(_text),
+                FlatButton(
+                    color: Colors.blue,
+                    onPressed: () {
+                  if (_geoLocationData != null) {
+                    setState(() {
+                      _text = jsonEncode(_geoLocationData.toJson());
+                    });
+                  }
+                }, child: Text('toJson')),
+
+              ],
+            ),
+          ),
+        )
+    );
+  }
+}
+
+```
+ 
